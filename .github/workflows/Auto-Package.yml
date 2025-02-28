@@ -9,7 +9,22 @@
 name: Auto-Packages
 
 on: 
-  repository_dispatch:
+  # push: 
+  #   branches:
+  #     - master
+  schedule:
+    - cron: 0 2 * * *
+  watch:
+    types: started
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: 'Packages'
+        required: false
+        default: ''
+
+# on: 
+  # repository_dispatch:
   # push: 
   #   branches:
   #     - master
