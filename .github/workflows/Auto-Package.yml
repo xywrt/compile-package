@@ -17,6 +17,14 @@ on:
   watch:
     types: started
   workflow_dispatch:
+    inputs:
+      choice:
+        type: choice
+        description: Make a choice
+        options:
+        - foo
+        - bar
+        - baz
 
 # on: 
   # repository_dispatch:
