@@ -60,23 +60,23 @@ jobs:
         echo "UPLOAD_FIRMWARE_TO_COWTRANSFER=${UPLOAD_FIRMWARE_TO_COWTRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
         if [[ "${{matrix.target}}" == arm_* ]]; then
-        echo "REPO_TOKEN=${{ secrets.TOKEN_KENZO7 }}" >> $GITHUB_ENV
+        echo "WRT_TOKEN=${{ secrets.WRT_TOKEN }}" >> $GITHUB_ENV
         else
-        echo "REPO_TOKEN=${{ secrets.TOKEN_KENZO8 }}" >> $GITHUB_ENV
+        echo "WRT_TOKEN=${{ secrets.WRT_TOKEN }}" >> $GITHUB_ENV
         fi
-        sed -i "1a REPO_TOKEN=${{ env.REPO_TOKEN }}" ${GITHUB_WORKSPACE}/devices/common/custom.sh
+        sed -i "1a REPO_TOKEN=${{ env.WRT_TOKEN }}" ${GITHUB_WORKSPACE}/devices/common/custom.sh
 
-    - name: Trigger Packages Update
-      run: |
-        gitdate="$(curl -H "Authorization: token ${{ env.REPO_TOKEN }}" -s "https://api.github.com/repos/kenzok8/small-package/actions/runs" | jq -r '.workflow_runs[0].created_at')" || true
-        gitdate="$(date -d "$gitdate" +%s)" || true
-        now="$(date -d "$(date)" +%s)"
-        if [[ $(expr $gitdate + 120) < $now ]]; then
-        curl -X POST https://api.github.com/repos/kenzok8/small-package/dispatches \
-        -H "Accept: application/vnd.github.everest-preview+json" \
-        -H "Authorization: token ${{ env.REPO_TOKEN }}" \
-        --data '{"event_type": "update"}'
-        fi
+    # - name: Trigger Packages Update
+    #   run: |
+    #     gitdate="$(curl -H "Authorization: token ${{ env.WRT_TOKEN }}" -s "https://api.github.com/repos/kenzok8/small-package/actions/runs" | jq -r '.workflow_runs[0].created_at')" || true
+    #     gitdate="$(date -d "$gitdate" +%s)" || true
+    #     now="$(date -d "$(date)" +%s)"
+    #     if [[ $(expr $gitdate + 120) < $now ]]; then
+    #     curl -X POST https://api.github.com/repos/kenzok8/small-package/dispatches \
+    #     -H "Accept: application/vnd.github.everest-preview+json" \
+    #     -H "Authorization: token ${{ env.WRT_TOKEN }}" \
+    #     --data '{"event_type": "update"}'
+    #     fi
 
     - name: Initialization environment
       env:
@@ -184,10 +184,10 @@ jobs:
 
     - name: Prepare
       run: |
-        status=$(curl -H "Authorization: token ${{ env.REPO_TOKEN }}" -s "https://api.github.com/repos/kenzok8/small-package/actions/runs" | jq -r '.workflow_runs[0].status')
+        status=$(curl -H "Authorization: token ${{ env.WRT_TOKEN }}" -s "https://api.github.com/repos/xywrt/small-package/actions/runs" | jq -r '.workflow_runs[0].status')
         while [ "$status" == "in_progress" ];do
           sleep 5
-          status=$(curl -H "Authorization: token ${{ env.REPO_TOKEN }}" -s "https://api.github.com/repos/kenzok8/small-package/actions/runs" | jq -r '.workflow_runs[0].status')
+          status=$(curl -H "Authorization: token ${{ env.WRT_TOKEN }}" -s "https://api.github.com/repos/xywrt/small-package/actions/runs" | jq -r '.workflow_runs[0].status')
         done
         cd openwrt
         make defconfig
@@ -226,7 +226,7 @@ jobs:
             if [[ "$fpkg" && ! "$during" ]]; then
               comp
             else
-              gitdate="$(curl -H "Authorization: token ${{ env.REPO_TOKEN }}" -s "https://api.github.com/repos/kenzok8/small-package/commits?path=$ipk&per_page=1" | jq -r '.[0].commit.committer.date')" || true
+              gitdate="$(curl -H "Authorization: token ${{ env.WRT_TOKEN }}" -s "https://api.github.com/repos/xybydy/small-package/commits?path=$ipk&per_page=1" | jq -r '.[0].commit.committer.date')" || true
               if [[ "$gitdate" && "$gitdate" != null ]]; then
                 gitdate="$(date -d "$gitdate" +%s)"
                 now="$(date -d "$(date)" +%s)"
@@ -288,7 +288,8 @@ jobs:
         
     - name: Create release
       id: create_release
-      if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
+      # if: env.WRT_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
+      if: env.WRT_TOKEN
       continue-on-error: true
       run: |
         echo -e "定时更新插件，推送发布 💤:\n" >> release.txt
@@ -301,9 +302,9 @@ jobs:
     - name: Upload packages for release
       uses: softprops/action-gh-release@v2
       continue-on-error: true
-      if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
+      if: env.WRT_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN_KENZO }}
+        GITHUB_TOKEN: ${{ secrets.WRT_TOKEN }}
       with:
         files: |
             packages/*
@@ -315,7 +316,7 @@ jobs:
     - name: Upload packages for artifact
       uses: actions/upload-artifact@main
       continue-on-error: true
-      if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
+      # if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
         name: ${{ env.date3 }} ${{matrix.target}}
         path: packages
