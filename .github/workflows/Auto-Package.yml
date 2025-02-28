@@ -20,11 +20,25 @@ on:
     inputs:
       choice:
         type: choice
-        description: Make a choice
+        description: Matrix Selection
         options:
-        - foo
-        - bar
-        - baz
+        - aarch64_generic
+        - x86_64
+        - i386_pentium4
+        - arm_arm1176jzf-s_vfp
+        - aarch64_cortex-a72
+        - aarch64_cortex-a76
+        - arm_cortex-a7
+        - arm_cortex-a7_neon-vfpv4
+        - arm_cortex-a9
+        - arm_cortex-a15_neon-vfpv4
+        - arm_cortex-a5_vfpv4
+        - mipsel_24kc
+        - mips_24kc
+        - aarch64_cortex-a53
+        - arm_xscale
+        - arm_cortex-a9_vfpv3-d16
+
 
 # on: 
   # repository_dispatch:
@@ -121,7 +135,8 @@ jobs:
         set -v
         REPO_BRANCH="24.10-SNAPSHOT"
         echo "$REPO_BRANCH"
-        TARGET="${{matrix.target}}"
+        # TARGET="${{matrix.target}}"
+        TARGET="${{ github.event.inputs.choice }}"
         if [ "$TARGET" == "mipsel_24kc" ]; then
             curl -fL -o sdk.tar.zst https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/ramips/mt7621/openwrt-sdk-$REPO_BRANCH-ramips-mt7621_gcc-13.3.0_musl.Linux-x86_64.tar.zst
         elif [ "$TARGET" == "mips_24kc" ]; then
