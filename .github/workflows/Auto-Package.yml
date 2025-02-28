@@ -298,8 +298,7 @@ jobs:
         
     - name: Create release
       id: create_release
-      # if: env.WRT_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
-      if: env.WRT_TOKEN
+      if: env.WRT_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
       continue-on-error: true
       run: |
         echo -e "定时更新插件，推送发布 💤:\n" >> release.txt
@@ -326,7 +325,7 @@ jobs:
     - name: Upload packages for artifact
       uses: actions/upload-artifact@main
       continue-on-error: true
-      # if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
+      if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
         name: ${{ env.date3 }} ${{matrix.target}}
         path: packages
