@@ -113,7 +113,7 @@ jobs:
         set -v
         REPO_BRANCH="24.10-SNAPSHOT"
         echo "$REPO_BRANCH"
-        TARGET="${{matrix.target}}"  # GitHub Actions değişkenini Bash'e aktarıyoruz
+        TARGET="${{matrix.target}}"
         if [ "$TARGET" == "mipsel_24kc" ]; then
             curl -fL -o sdk.tar.zst https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/ramips/mt7621/openwrt-sdk-$REPO_BRANCH-ramips-mt7621_gcc-13.3.0_musl.Linux-x86_64.tar.zst
         elif [ "$TARGET" == "mips_24kc" ]; then
@@ -157,8 +157,8 @@ jobs:
     - name: Load custom configuration
       run: |
         mkdir openwrt
-        tar -xJf sdk.tar.xz -C openwrt
-        rm -Rf sdk.tar.xz
+        tar -xJf sdk.tar.zst -C openwrt
+        rm -Rf sdk.tar.zst
         cd openwrt
         cp -rf ./openwrt-sdk*/. ./ || true
         cp -rf ../devices ./
@@ -185,9 +185,6 @@ jobs:
           echo >> .config
           cat devices/${{matrix.target}}/.config >> .config
         fi
-        #if [[ ${{github.actor}} == "kenzok8" ]]; then
-          #sed -i "s/index()/index()\nif luci.sys.exec(\"cat \/etc\/openwrt_release | grep -o -E ^DISTRIB_DESCRIPTION='.*(kenzo|kenzok8)'\") == \"\" then return end/g" package/feeds/jell/luci-app*/luasrc/controller/*.lua
-        #fi
 
     - name: SSH connection to Actions
       uses: kenzok78/debugger-action@master
