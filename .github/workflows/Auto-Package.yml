@@ -214,11 +214,11 @@ jobs:
     - name: Prepare
       run: |
         cd openwrt
-        mv -f package/feeds/xywrt xywrt.b
+        mv -f feeds/xywrt xywrt.b
         mv -f feeds/packages/lang feeds/packages/lang.b
         mv -f feeds/packages feeds/packages.b
         mkdir package/feeds/xywrt
-        cp -rf xywrt.b/{wxbase,lib*,rapidjson,nftables,jpcre2,toml11,gn,curl,quickjspp,qt*,libdouble*,libtorrent*,openssl,mbedtls,ppp,cups,nftables} package/feeds/kiddin9/ || true
+        cp -rf xywrt.b/{wxbase,lib*,rapidjson,nftables,jpcre2,toml11,gn,curl,quickjspp,qt*,libdouble*,libtorrent*,openssl,mbedtls,ppp,cups,nftables} package/feeds/xywrt/ || true
 
     - name: Compile the firmware
       run: |
