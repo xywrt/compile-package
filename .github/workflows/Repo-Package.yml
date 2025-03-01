@@ -43,6 +43,7 @@ on:
 
 env:
   REPO_TOKEN: ${{ secrets.TOKEN_XY }}
+  ACTIONS_RUNNER_DEBUG : true
   TZ: Asia/Shanghai
 
 jobs:
