@@ -19,8 +19,27 @@ on:
   workflow_dispatch:
     inputs:
       packages:
-        required: false
-        default: ''
+          type: choice
+          description: Matrix Selection
+          options:
+          - aarch64_generic
+          - x86_64
+          - i386_pentium4
+          - arm_arm1176jzf-s_vfp
+          - aarch64_cortex-a72
+          - aarch64_cortex-a76
+          - arm_cortex-a7
+          - arm_cortex-a7_neon-vfpv4
+          - arm_cortex-a9
+          - arm_cortex-a15_neon-vfpv4
+          - arm_cortex-a5_vfpv4
+          - mipsel_24kc
+          - mips_24kc
+          - aarch64_cortex-a53
+          - arm_xscale
+          - arm_cortex-a9_vfpv3-d16
+        # required: false
+        # default: ''
 
 env:
   REPO_TOKEN: ${{ secrets.TOKEN_XY }}
@@ -68,7 +87,7 @@ jobs:
           -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Authorization: token ${{ env.REPO_TOKEN }}" \
-          -d '{"event_type": "${{ github.event.inputs.packages }}", "client_payload": {"target": "${{ github.event.inputs.packages }}"}}'
+          -d '{"event_type": "${{ github.event.inputs.packages }}", "client_payload": {"target": "x86_64"}}'
           # curl \
           # -X POST https://api.github.com/repos/${{ github.repository }}/dispatches \
           # -H "Accept: application/vnd.github.everest-preview+json" \
