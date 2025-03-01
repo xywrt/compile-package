@@ -62,7 +62,7 @@ jobs:
           echo "REPO_TOKEN=${{ secrets.WRT_TOKEN }}" >> $GITHUB_ENV
         fi
         sed -i "1a REPO_TOKEN=${{ env.WRT_TOKEN }}" ${GITHUB_WORKSPACE}/devices/common/custom.sh
-        echo $env
+
 
     - name: Free disk space
       uses: coder-xiaomo/free-disk-space@main
@@ -323,7 +323,7 @@ jobs:
         
     - name: Create release
       id: create_release
-      if: env.REPO_TOKEN && env.c == 'true'
+      # if: env.REPO_TOKEN && env.c == 'true'
       continue-on-error: true
       run: |
         echo -e "墙内加速下载 🚀:\n" >> release.txt
@@ -335,9 +335,9 @@ jobs:
     - name: Upload packages for release
       uses: softprops/action-gh-release@master
       continue-on-error: true
-      if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
+      # if: env.REPO_TOKEN && env.UPLOAD_FIRMWARE_FOR_RELEASE == 'true'
       env:
-        GITHUB_TOKEN: ${{ secrets.TOKEN_KIDDIN9 }}
+        GITHUB_TOKEN: ${{ secrets.WRT_TOKEN }}
       with:
         files: |
             packages/*
