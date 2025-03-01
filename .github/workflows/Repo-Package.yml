@@ -42,7 +42,7 @@ on:
         # default: ''
 
 env:
-  REPO_TOKEN: ${{ secrets.WRT_SECRET }}
+  REPO_TOKEN: ${{ secrets.TOKEN_XY }}
   TZ: Asia/Shanghai
 
 jobs:
@@ -55,7 +55,7 @@ jobs:
       if: contains(github.event.inputs.packages, ' cw')
       with:
         workflow_id: all
-        access_token: ${{ secrets.WRT_SECRET }}
+        access_token: ${{ secrets.TOKEN_XY }}
     
     - name: Trigger matrix Update
       run: |
