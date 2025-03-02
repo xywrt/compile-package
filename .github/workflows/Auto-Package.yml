@@ -208,6 +208,10 @@ jobs:
         done
         make defconfig
 
+    - name: SSH connection to Actions
+      uses: kiddin9/debugger-action@master
+      # if: contains(github.event.action, 'ssh')
+      
     - name: Prepare
       run: |
         cd openwrt
@@ -218,9 +222,7 @@ jobs:
         mkdir package/feeds/xywrt
         cp -rf xywrt.b/{wxbase,lib*,rapidjson,nftables,jpcre2,toml11,gn,curl,quickjspp,qt*,libdouble*,libtorrent*,openssl,mbedtls,ppp,cups,nftables} package/feeds/xywrt/ || true
 
-    - name: SSH connection to Actions
-      uses: kiddin9/debugger-action@master
-      if: contains(github.event.action, 'ssh')
+
 
     - name: Compile the firmware
       run: |
